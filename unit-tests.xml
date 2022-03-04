@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite tests="29" failures="0" time="0.000000" name="github.com/anu1097/golang-mask-utility" timestamp="2022-03-04T00:54:40+05:30">
+		<properties>
+			<property name="go.version" value="go1.17.6 darwin/arm64"></property>
+		</properties>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestTypeFilter" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestValueFilter/string" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestValueFilter/struct" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestValueFilter/map" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestValueFilter" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestTagFilter" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestPiiPhoneNumber/string" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestPiiPhoneNumber/struct" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestPiiPhoneNumber/map" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestPiiPhoneNumber" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestPiiEmailNumber" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestPiiCustomRegexNumber" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestFieldFilter/struct" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestFieldFilter/map" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestFieldFilter" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestFieldPrefixFilter" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/string" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/original_data_is_not_modified_when_filtered" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/non-ptr_struct_can_be_modified" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/nested_structure_can_be_modified" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/map_data" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/array_data" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/array_data_with_ptr" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/original_type" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/unexported_field_is_also_copied" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct/various_field" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/struct" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone/filter_various_type" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility" name="TestClone" time="0.000000"></testcase>
+	</testsuite>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/anu1097/golang-mask-utility/filter" timestamp="2022-03-04T00:54:40+05:30">
+		<properties>
+			<property name="go.version" value="go1.17.6 darwin/arm64"></property>
+		</properties>
+	</testsuite>
+	<testsuite tests="115" failures="0" time="0.000000" name="github.com/anu1097/golang-mask-utility/masker" timestamp="2022-03-04T00:54:40+05:30">
+		<properties>
+			<property name="go.version" value="go1.17.6 darwin/arm64"></property>
+		</properties>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay/Start_Less_Than_0" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay/Start_Greater_Than_Length" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay/End_Less_Than_0" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay/Start_Less_Than_End" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_overlay" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Error_Mask_Type" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Password" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Name" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Address" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Email" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Mobile" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/ID" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/Telephone" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String/CreditCard" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_String" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Chinese_Length_1" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Chinese_Length_2" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Chinese_Length_3" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Chinese_Length_4" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Chinese_Length_5" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/Chinese_Length_6" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/English_Length_4" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/English_Full_Name" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name/English_Full_Name#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Name" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_ID/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_ID/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_ID/Length_Less_Than_6" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_ID/Length_Less_Than_6#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_ID/Length_Between_6_and_10" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_ID" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Address/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Address/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Address/Length_Less_Than_6" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Address" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_CreditCard/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_CreditCard/VISA_JCB_MasterCard" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_CreditCard/American_Express" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_CreditCard" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Email/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Email/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Email/Address_Less_Than_3" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Email/Invalid_email_format" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Email" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Mobile/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Mobile/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Mobile/Happy_Pass#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Mobile" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Telephone/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Telephone/With_Special_Chart" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Telephone/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Telephone/Happy_Pass#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Telephone/Length_Not_Eq_8_or_10" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Telephone" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Password/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Password/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Password/Happy_Pass#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMasker_Password" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestNew/New_Instance" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestNew" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Error_Mask_Type" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Password" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Name" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Address" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Email" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Mobile" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/ID" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/Telephone" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString/CreditCard" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestString" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Chinese_Length_1" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Chinese_Length_2" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Chinese_Length_3" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Chinese_Length_4" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Chinese_Length_5" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/Chinese_Length_6" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/English_Length_4" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/English_Full_Name" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName/English_Full_Name#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestName" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestID/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestID/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestID/Length_Less_Than_6" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestID/Length_Less_Than_6#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestID/Length_Between_6_and_10" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestID" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestAddress/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestAddress/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestAddress/Length_Less_Than_6" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestAddress" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestCreditCard/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestCreditCard/VISA_JCB_MasterCard" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestCreditCard/American_Express" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestCreditCard" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestEmail/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestEmail/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestEmail/Address_Less_Than_3" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestEmail" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMobile/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMobile/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMobile/Happy_Pass#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestMobile" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestTelephone/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestTelephone/With_Special_Chart" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestTelephone/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestTelephone/Happy_Pass#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestTelephone" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestPassword/Empty_Input" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestPassword/Happy_Pass" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestPassword/Happy_Pass#01" time="0.000000"></testcase>
+		<testcase classname="github.com/anu1097/golang-mask-utility/masker" name="TestPassword" time="0.000000"></testcase>
+	</testsuite>
+</testsuites>
