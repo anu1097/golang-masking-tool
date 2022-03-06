@@ -3,7 +3,7 @@ package filter
 import (
 	"regexp"
 
-	"github.com/anu1097/golang-mask-utility/masker"
+	"github.com/anu1097/golang-mask-utility/customMasker"
 )
 
 const defaultPhoneRegex = `^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$`
@@ -11,9 +11,10 @@ const defaultEmailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA
 
 type piiRegexFilter struct {
 	RegexList []regexp.Regexp
-	mtype     masker.Mtype
+	mtype     customMasker.Mtype
 }
 
+// Get Phone Filter.
 func PhoneFilter() *piiRegexFilter {
 	return &piiRegexFilter{
 		RegexList: []regexp.Regexp{
@@ -22,7 +23,8 @@ func PhoneFilter() *piiRegexFilter {
 	}
 }
 
-func CustomPhoneFilter(mtype masker.Mtype) *piiRegexFilter {
+// Get Custom Phone Filter with custom masking type.
+func CustomPhoneFilter(mtype customMasker.Mtype) *piiRegexFilter {
 	return &piiRegexFilter{
 		RegexList: []regexp.Regexp{
 			*regexp.MustCompile(defaultPhoneRegex),
@@ -31,6 +33,7 @@ func CustomPhoneFilter(mtype masker.Mtype) *piiRegexFilter {
 	}
 }
 
+// Get Email Filter.
 func EmailFilter() *piiRegexFilter {
 	return &piiRegexFilter{
 		RegexList: []regexp.Regexp{
@@ -39,7 +42,8 @@ func EmailFilter() *piiRegexFilter {
 	}
 }
 
-func CustomEmailFilter(mtype masker.Mtype) *piiRegexFilter {
+// Get Custom Email Filter with custom masking type.
+func CustomEmailFilter(mtype customMasker.Mtype) *piiRegexFilter {
 	return &piiRegexFilter{
 		RegexList: []regexp.Regexp{
 			*regexp.MustCompile(defaultEmailRegex),
@@ -48,6 +52,7 @@ func CustomEmailFilter(mtype masker.Mtype) *piiRegexFilter {
 	}
 }
 
+// Get Custom Regex Filter.
 func CustomRegexFilter(regexPattern string) *piiRegexFilter {
 	return &piiRegexFilter{
 		RegexList: []regexp.Regexp{
@@ -56,7 +61,8 @@ func CustomRegexFilter(regexPattern string) *piiRegexFilter {
 	}
 }
 
-func CustomRegexFilterWithMType(regexPattern string, mtype masker.Mtype) *piiRegexFilter {
+// Get Custom Regex Filter with custom masking type
+func CustomRegexFilterWithMType(regexPattern string, mtype customMasker.Mtype) *piiRegexFilter {
 	return &piiRegexFilter{
 		RegexList: []regexp.Regexp{
 			*regexp.MustCompile(regexPattern),
@@ -67,7 +73,7 @@ func CustomRegexFilterWithMType(regexPattern string, mtype masker.Mtype) *piiReg
 
 func (x *piiRegexFilter) ReplaceString(s string) string {
 	for _, p := range x.RegexList {
-		s = p.ReplaceAllString(s, maskerInstance.String(x.mtype, s, GetFilteredLabel()))
+		s = p.ReplaceAllString(s, customMaskerInstance.String(x.mtype, s, GetFilteredLabel()))
 	}
 	return s
 }

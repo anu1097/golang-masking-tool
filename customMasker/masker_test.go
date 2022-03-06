@@ -1,4 +1,4 @@
-package masker
+package customMasker
 
 import (
 	"reflect"
@@ -14,7 +14,7 @@ func TestMasker_overlay(t *testing.T) {
 	}
 	tests := []struct {
 		name          string
-		m             *masker
+		m             *Masker
 		args          args
 		wantOverlayed string
 	}{
@@ -87,7 +87,7 @@ func TestMasker_overlay(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &masker{}
+			m := &Masker{}
 			if gotOverlayed := m.overlay(tt.args.str, tt.args.overlay, tt.args.start, tt.args.end); gotOverlayed != tt.wantOverlayed {
 				t.Errorf("Masker.overlay() = %v, want %v", gotOverlayed, tt.wantOverlayed)
 			}
@@ -102,7 +102,7 @@ func TestMasker_String(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -204,7 +204,7 @@ func TestMasker_Name(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -288,7 +288,7 @@ func TestMasker_ID(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -348,7 +348,7 @@ func TestMasker_Address(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -392,7 +392,7 @@ func TestMasker_CreditCard(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -436,7 +436,7 @@ func TestMasker_Email(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -488,7 +488,7 @@ func TestMasker_Mobile(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -532,7 +532,7 @@ func TestMasker_Telephone(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -592,7 +592,7 @@ func TestMasker_Password(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		m    *masker
+		m    *Masker
 		args args
 		want string
 	}{
@@ -633,11 +633,11 @@ func TestMasker_Password(t *testing.T) {
 func TestNew(t *testing.T) {
 	tests := []struct {
 		name string
-		want *masker
+		want *Masker
 	}{
 		{
 			name: "New Instance",
-			want: &masker{mask: "*"},
+			want: &Masker{mask: "*"},
 		},
 	}
 	for _, tt := range tests {

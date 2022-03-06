@@ -1,27 +1,29 @@
 package filter
 
-import "github.com/anu1097/golang-mask-utility/masker"
+import "github.com/anu1097/golang-mask-utility/customMasker"
 
 type allFieldsFilter struct {
-	mtype masker.Mtype
+	mtype customMasker.Mtype
 }
 
+// Get All Fields Filter.
 func AllFieldFilter() *allFieldsFilter {
 	return &allFieldsFilter{}
 }
 
-func CustomAllFieldFilter(mtype masker.Mtype) *allFieldsFilter {
+// Get All Fields Custom Filter with custom masking type
+func CustomAllFieldFilter(mtype customMasker.Mtype) *allFieldsFilter {
 	return &allFieldsFilter{
 		mtype: mtype,
 	}
 }
 
 func (x *allFieldsFilter) ReplaceString(s string) string {
-	return s
+	return GetFilteredLabel()
 }
 
 func (x *allFieldsFilter) MaskString(s string) string {
-	return s
+	return customMaskerInstance.String(x.mtype, s, GetFilteredLabel())
 }
 
 func (x *allFieldsFilter) ShouldMask(fieldName string, value interface{}, tag string) bool {

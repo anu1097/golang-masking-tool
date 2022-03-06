@@ -23,7 +23,7 @@ if [ "$1" == "-coverage" ]; then
     echo "Opening up coverage report in browser"
     sleep 2 && go tool cover -html=coverage.out;
 else
-    gotestsum --format testname --junitfile unit-tests.xml ./...
+    gotestsum --format testname ./...
     test_status=$?  
 fi
 

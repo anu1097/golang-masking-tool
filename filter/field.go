@@ -3,21 +3,23 @@ package filter
 import (
 	"strings"
 
-	"github.com/anu1097/golang-mask-utility/masker"
+	"github.com/anu1097/golang-mask-utility/customMasker"
 )
 
 type fieldFilter struct {
 	target   string
-	maskType masker.Mtype
+	maskType customMasker.Mtype
 }
 
-func CustomFieldFilter(target string, maskType masker.Mtype) *fieldFilter {
+// Get a Custom Field Filter. Pass custom Masker type to define filter mechanism
+func CustomFieldFilter(target string, maskType customMasker.Mtype) *fieldFilter {
 	return &fieldFilter{
 		target:   target,
 		maskType: maskType,
 	}
 }
 
+// Get a Field Filter.
 func FieldFilter(target string) *fieldFilter {
 	return &fieldFilter{
 		target: target,
@@ -25,7 +27,7 @@ func FieldFilter(target string) *fieldFilter {
 }
 
 func (x *fieldFilter) MaskString(s string) string {
-	return maskerInstance.String(x.maskType, s, GetFilteredLabel())
+	return customMaskerInstance.String(x.maskType, s, GetFilteredLabel())
 }
 
 func (x *fieldFilter) ReplaceString(s string) string {
@@ -38,16 +40,18 @@ func (x *fieldFilter) ShouldMask(fieldName string, value interface{}, tag string
 
 type fieldPrefixFilter struct {
 	prefix   string
-	maskType masker.Mtype
+	maskType customMasker.Mtype
 }
 
+// Get a Field Prefix Filter.
 func FieldPrefixFilter(prefix string) *fieldPrefixFilter {
 	return &fieldPrefixFilter{
 		prefix: prefix,
 	}
 }
 
-func CustomFieldPrefixFilter(prefix string, maskType masker.Mtype) *fieldPrefixFilter {
+// Get a Custom Field Prefix Filter. Pass custom Masker type to define filter mechanism
+func CustomFieldPrefixFilter(prefix string, maskType customMasker.Mtype) *fieldPrefixFilter {
 	return &fieldPrefixFilter{
 		prefix:   prefix,
 		maskType: maskType,
@@ -55,7 +59,7 @@ func CustomFieldPrefixFilter(prefix string, maskType masker.Mtype) *fieldPrefixF
 }
 
 func (x *fieldPrefixFilter) MaskString(s string) string {
-	return maskerInstance.String(x.maskType, s, GetFilteredLabel())
+	return customMaskerInstance.String(x.maskType, s, GetFilteredLabel())
 }
 
 func (x *fieldPrefixFilter) ReplaceString(s string) string {

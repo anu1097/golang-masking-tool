@@ -3,21 +3,23 @@ package filter
 import (
 	"strings"
 
-	"github.com/anu1097/golang-mask-utility/masker"
+	"github.com/anu1097/golang-mask-utility/customMasker"
 )
 
+// Get Value Filter.
 type valueFilter struct {
 	target   string
-	maskType masker.Mtype
+	maskType customMasker.Mtype
 }
 
+// Get Custom Value Filter with custom masking type.
 func ValueFilter(target string) *valueFilter {
 	return &valueFilter{
 		target: target,
 	}
 }
 
-func CustomValueFilter(target string, maskType masker.Mtype) *valueFilter {
+func CustomValueFilter(target string, maskType customMasker.Mtype) *valueFilter {
 	return &valueFilter{
 		target:   target,
 		maskType: maskType,
@@ -25,7 +27,7 @@ func CustomValueFilter(target string, maskType masker.Mtype) *valueFilter {
 }
 
 func (x *valueFilter) ReplaceString(s string) string {
-	return strings.ReplaceAll(s, x.target, maskerInstance.String(x.maskType, s, GetFilteredLabel()))
+	return strings.ReplaceAll(s, x.target, customMaskerInstance.String(x.maskType, s, GetFilteredLabel()))
 }
 
 func (x *valueFilter) MaskString(s string) string {

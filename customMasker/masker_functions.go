@@ -1,4 +1,4 @@
-package masker
+package customMasker
 
 // String mask input string of the mask type
 //
@@ -81,6 +81,7 @@ func Password(i string) string {
 	return instance.Password(i)
 }
 
+// SetMask sets Masking Character used my custom masker
 func SetMask(mask string) {
 	instance.mask = mask
 }

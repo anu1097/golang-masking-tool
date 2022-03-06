@@ -1,19 +1,10 @@
 // Package masker Provide mask format of Taiwan usually used(Name, Address, Email, ID ...etc.),
-package masker
+package customMasker
 
 import (
 	"math"
 	"net/url"
 	"strings"
-)
-
-type MaskinCharacter string
-
-const (
-	PStar       MaskinCharacter = "*"
-	PHyphen     MaskinCharacter = "-"
-	PUnderscore MaskinCharacter = "_"
-	PCross      MaskinCharacter = "x"
 )
 
 type MaskerInterface interface {
@@ -28,11 +19,11 @@ type MaskerInterface interface {
 	Telephone(i string) string
 	Password(i string) string
 	URL(i string) string
-	UpdateMaskingCharacter(maskingCharacter MaskinCharacter)
+	UpdateMaskingCharacter(maskingCharacter MaskingCharacter)
 }
 
-// masker is a instance to marshal masked string
-type masker struct {
+// Masker is a instance to marshal masked string
+type Masker struct {
 	mask string
 }
 
@@ -44,7 +35,7 @@ func strLoop(str string, length int) string {
 	return mask
 }
 
-func (m *masker) overlay(str string, overlay string, start int, end int) (overlayed string) {
+func (m *Masker) overlay(str string, overlay string, start int, end int) (overlayed string) {
 	r := []rune(str)
 	l := len([]rune(r))
 
@@ -84,7 +75,7 @@ func (m *masker) overlay(str string, overlay string, start int, end int) (overla
 //   masker.String(masker.MName, "ggwhite")
 //   masker.String(masker.MID, "A123456789")
 //   masker.String(masker.MMobile, "0987987987")
-func (m *masker) String(t Mtype, i string, defaultFilteredString string) string {
+func (m *Masker) String(t Mtype, i string, defaultFilteredString string) string {
 	switch t {
 	default:
 		return defaultFilteredString
@@ -114,7 +105,7 @@ func (m *masker) String(t Mtype, i string, defaultFilteredString string) string 
 // Example:
 //   input: ABCD
 //   output: A**D
-func (m *masker) Name(i string) string {
+func (m *Masker) Name(i string) string {
 	l := len([]rune(i))
 
 	if l == 0 {
@@ -146,7 +137,7 @@ func (m *masker) Name(i string) string {
 // Example:
 //   input: A123456789
 //   output: A12345****
-func (m *masker) ID(i string) string {
+func (m *Masker) ID(i string) string {
 	l := len([]rune(i))
 	if l == 0 {
 		return ""
@@ -159,7 +150,7 @@ func (m *masker) ID(i string) string {
 // Example:
 //   input: 台北市內湖區內湖路一段737巷1號1樓
 //   output: 台北市內湖區******
-func (m *masker) Address(i string) string {
+func (m *Masker) Address(i string) string {
 	l := len([]rune(i))
 	if l == 0 {
 		return ""
@@ -177,7 +168,7 @@ func (m *masker) Address(i string) string {
 //   output1: 123456******3456
 //   input2: 123456789012345` (American Express)(len = 15)
 //   output2: 123456******345`
-func (m *masker) CreditCard(i string) string {
+func (m *Masker) CreditCard(i string) string {
 	l := len([]rune(i))
 	if l == 0 {
 		return ""
@@ -190,7 +181,7 @@ func (m *masker) CreditCard(i string) string {
 // Example:
 //   input: ggw.chang@gmail.com
 //   output: ggw****@gmail.com
-func (m *masker) Email(i string) string {
+func (m *Masker) Email(i string) string {
 	l := len([]rune(i))
 	if l == 0 {
 		return ""
@@ -218,7 +209,7 @@ func (m *masker) Email(i string) string {
 // Example:
 //   input: 0987654321
 //   output: 0987***321
-func (m *masker) Mobile(i string) string {
+func (m *Masker) Mobile(i string) string {
 	if len(i) == 0 {
 		return ""
 	}
@@ -230,7 +221,7 @@ func (m *masker) Mobile(i string) string {
 // Example:
 //   input: 0227993078
 //   output: (02)2799-****
-func (m *masker) Telephone(i string) string {
+func (m *Masker) Telephone(i string) string {
 	l := len([]rune(i))
 	if l == 0 {
 		return ""
@@ -264,7 +255,7 @@ func (m *masker) Telephone(i string) string {
 }
 
 // Password always return "************"
-func (m *masker) Password(i string) string {
+func (m *Masker) Password(i string) string {
 	l := len([]rune(i))
 	if l == 0 {
 		return ""
@@ -277,7 +268,7 @@ func (m *masker) Password(i string) string {
 // Example:
 //   input: http://admin:mysecretpassword@localhost:1234/uri
 //   output:http://admin:xxxxx@localhost:1234/uri
-func (m *masker) URL(i string) string {
+func (m *Masker) URL(i string) string {
 	u, err := url.Parse(i)
 	if err != nil {
 		return i
@@ -285,18 +276,19 @@ func (m *masker) URL(i string) string {
 	return u.Redacted()
 }
 
-func (m *masker) UpdateMaskingCharacter(maskingCharacter MaskinCharacter) {
+// Update Masking Character Used by Custom Masker
+func (m *Masker) UpdateMaskingCharacter(maskingCharacter MaskingCharacter) {
 	m.mask = string(maskingCharacter)
 }
 
 // NewMasker create Masker
-func NewMasker() *masker {
-	return &masker{
+func NewMasker() *Masker {
+	return &Masker{
 		mask: string(PStar),
 	}
 }
 
-var instance *masker
+var instance *Masker
 
 func init() {
 	instance = NewMasker()

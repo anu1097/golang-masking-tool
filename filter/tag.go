@@ -1,10 +1,10 @@
 package filter
 
-import "github.com/anu1097/golang-mask-utility/masker"
+import "github.com/anu1097/golang-mask-utility/customMasker"
 
 type tagFilter struct {
 	SecureTags []string
-	maskType   masker.Mtype
+	maskType   customMasker.Mtype
 }
 
 var tagKey = "mask"
@@ -17,9 +17,14 @@ func GetTagKey() string {
 	return tagKey
 }
 
-func TagFilter(tags ...masker.Mtype) *tagFilter {
+// Get Tag Filter. Need to pass custom masker type string.
+//
+// Example:
+//   input: secret
+//   output: [filtered]
+func TagFilter(tags ...customMasker.Mtype) *tagFilter {
 	if len(tags) == 0 {
-		tags = []masker.Mtype{masker.MSecret}
+		tags = []customMasker.Mtype{customMasker.MSecret}
 	}
 	var secureTags []string
 	for _, tag := range tags {
@@ -33,13 +38,13 @@ func TagFilter(tags ...masker.Mtype) *tagFilter {
 func (x *tagFilter) ReplaceString(s string) string { return s }
 
 func (x *tagFilter) MaskString(s string) string {
-	return maskerInstance.String(x.maskType, s, GetFilteredLabel())
+	return customMaskerInstance.String(x.maskType, s, GetFilteredLabel())
 }
 
 func (x *tagFilter) ShouldMask(fieldName string, value interface{}, tag string) bool {
 	for i := range x.SecureTags {
 		if x.SecureTags[i] == tag {
-			x.maskType = masker.Mtype(tag)
+			x.maskType = customMasker.Mtype(tag)
 			return true
 		}
 	}

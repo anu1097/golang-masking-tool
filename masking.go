@@ -3,47 +3,54 @@ package mask
 import (
 	"reflect"
 
+	"github.com/anu1097/golang-mask-utility/customMasker"
 	"github.com/anu1097/golang-mask-utility/filter"
-	"github.com/anu1097/golang-mask-utility/masker"
 )
 
-var filterList filter.Filters = filter.Filters{}
-
 type Masking interface {
-	AddFilters(filters ...filter.Filter)
+	UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter)
+	AppendFilters(filters ...filter.Filter)
 	GetFilters() filter.Filters
 	MaskDetails(v interface{}) interface{}
-	Clone(fieldName string, value reflect.Value, tag string) reflect.Value
-	UpdateMaskingCharacter()
+	clone(fieldName string, value reflect.Value, tag string) reflect.Value
 }
 
 type masking struct {
 	filterList filter.Filters
 }
 
+// Get a new masking instance. Pass your required filters
 func NewMasking(filters ...filter.Filter) *masking {
+	filter.SetCustomMaskerInstance(customMasker.NewMasker())
+	var filterList = filter.Filters{}
 	filterList = append(filterList, filters...)
 	return &masking{
 		filterList: filterList,
 	}
 }
 
-func (x *masking) UpdateCustomMaskingChar(maskingChar masker.MaskinCharacter) {
+// Call to update masking character for custom masker
+func (x *masking) UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter) {
 	filter.UpdateCustomMaskingChar(maskingChar)
 }
-func (x *masking) AddFilters(filters ...filter.Filter) {
+
+// Append to existing list of filters in masking instance
+func (x *masking) AppendFilters(filters ...filter.Filter) {
 	x.filterList = append(x.filterList, filters...)
 }
 
+// Get complete list of existing filters used by masking instance
 func (x *masking) GetFilters() filter.Filters {
 	return x.filterList
 }
 
+// Call to Mask Details from a given instance
 func (x *masking) MaskDetails(v interface{}) interface{} {
-	return x.Clone("", reflect.ValueOf(v), "").Interface()
+	return x.clone("", reflect.ValueOf(v), "").Interface()
 }
 
-func (x *masking) Clone(fieldName string, value reflect.Value, tag string) reflect.Value {
+// Internal function which masks based on filters and returns a clone of the data passed
+func (x *masking) clone(fieldName string, value reflect.Value, tag string) reflect.Value {
 	adjustValue := func(ret reflect.Value) reflect.Value {
 		switch value.Kind() {
 		case reflect.Ptr, reflect.Map, reflect.Slice, reflect.Array:
@@ -92,7 +99,7 @@ func (x *masking) Clone(fieldName string, value reflect.Value, tag string) refle
 				continue
 			}
 			tagValue := f.Tag.Get(filter.GetTagKey())
-			dst.Elem().Field(i).Set(x.Clone(f.Name, fv, tagValue))
+			dst.Elem().Field(i).Set(x.clone(f.Name, fv, tagValue))
 		}
 
 	case reflect.Map:
@@ -100,13 +107,13 @@ func (x *masking) Clone(fieldName string, value reflect.Value, tag string) refle
 		keys := src.MapKeys()
 		for i := 0; i < src.Len(); i++ {
 			mValue := src.MapIndex(keys[i])
-			dst.SetMapIndex(keys[i], x.Clone(keys[i].String(), mValue, ""))
+			dst.SetMapIndex(keys[i], x.clone(keys[i].String(), mValue, ""))
 		}
 
 	case reflect.Array, reflect.Slice:
 		dst = reflect.MakeSlice(src.Type(), src.Len(), src.Cap())
 		for i := 0; i < src.Len(); i++ {
-			dst.Index(i).Set(x.Clone(fieldName, src.Index(i), ""))
+			dst.Index(i).Set(x.clone(fieldName, src.Index(i), ""))
 		}
 
 	case reflect.Interface:

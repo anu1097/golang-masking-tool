@@ -1,8 +1,8 @@
-package masker
+package customMasker
 
 type Mtype string
 
-// Maske Types of format string
+// Mask Types of format string
 const (
 	MPassword   Mtype = "password"
 	MName       Mtype = "name"
@@ -14,4 +14,14 @@ const (
 	MCreditCard Mtype = "credit"
 	MURL        Mtype = "url"
 	MSecret     Mtype = "secret"
+)
+
+type MaskingCharacter string
+
+// MaskingCharacter Types of placeholder string
+const (
+	PStar       MaskingCharacter = "*"
+	PHyphen     MaskingCharacter = "-"
+	PUnderscore MaskingCharacter = "_"
+	PCross      MaskingCharacter = "x"
 )

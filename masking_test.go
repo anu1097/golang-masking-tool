@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/anu1097/golang-mask-utility/customMasker"
 	"github.com/anu1097/golang-mask-utility/filter"
-	"github.com/anu1097/golang-mask-utility/masker"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -14,126 +14,127 @@ func newMaskTool(filters ...filter.Filter) masking {
 	return *NewMasking(filters...)
 }
 
-func TestDefaultValueFilter(t *testing.T) {
-	const issuedToken = "abcd1234"
-	maskTool := newMaskTool(filter.ValueFilter(issuedToken))
-	t.Run("string", func(t *testing.T) {
-		record := "Authorization: Bearer " + issuedToken
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		assert.Equal(t, "Authorization: Bearer [filtered]", filteredData)
+func TestValueFilter(t *testing.T) {
+	t.Run("DefaultValueFilter", func(t *testing.T) {
+		const issuedToken = "abcd1234"
+		maskTool := newMaskTool(filter.ValueFilter(issuedToken))
+		t.Run("string", func(t *testing.T) {
+			record := "Authorization: Bearer " + issuedToken
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			assert.Equal(t, "Authorization: Bearer [filtered]", filteredData)
 
-		// fmt.Println(filteredData)
-		// "Authorization: Bearer [filtered]"
+			// fmt.Println(filteredData)
+			// "Authorization: Bearer [filtered]"
+		})
+
+		t.Run("struct", func(t *testing.T) {
+			type myRecord struct {
+				ID   string
+				Data string
+			}
+			record := myRecord{
+				ID:   "userId",
+				Data: issuedToken,
+			}
+
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			copied, ok := filteredData.(myRecord)
+			require.True(t, ok)
+			require.NotNil(t, copied)
+			assert.Equal(t, "userId", copied.ID)
+			assert.Equal(t, filter.GetFilteredLabel(), copied.Data)
+			// fmt.Println(copied)
+			// "{userId [filtered]}"
+		})
+
+		t.Run("array", func(t *testing.T) {
+			record := []string{
+				"userId",
+				"data",
+				issuedToken,
+			}
+
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			assert.Equal(t, []string([]string{"userId", "data", filter.GetFilteredLabel()}), filteredData)
+			// fmt.Println(copied)
+			// "{userId [filtered]}"
+		})
+
+		t.Run("map", func(*testing.T) {
+			mapRecord := map[string]interface{}{
+				"data": issuedToken,
+			}
+			filteredData := maskTool.MaskDetails(mapRecord)
+			require.NotNil(t, filteredData)
+			assert.Equal(t, map[string]interface{}{"data": "[filtered]"}, filteredData)
+		})
+
 	})
+	t.Run("CustomValueFilter", func(t *testing.T) {
+		const issuedToken = "abcd1234"
+		maskTool := newMaskTool(filter.CustomValueFilter(issuedToken, customMasker.MPassword))
+		t.Run("string", func(t *testing.T) {
+			record := "Authorization: Bearer " + issuedToken
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			assert.Equal(t, "Authorization: Bearer ************", filteredData)
 
-	t.Run("struct", func(t *testing.T) {
-		type myRecord struct {
-			ID   string
-			Data string
-		}
-		record := myRecord{
-			ID:   "userId",
-			Data: issuedToken,
-		}
+			// fmt.Println(filteredData)
+			// "Authorization: Bearer [filtered]"
+		})
 
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		copied, ok := filteredData.(myRecord)
-		require.True(t, ok)
-		require.NotNil(t, copied)
-		assert.Equal(t, "userId", copied.ID)
-		assert.Equal(t, filter.GetFilteredLabel(), copied.Data)
-		// fmt.Println(copied)
-		// "{userId [filtered]}"
+		t.Run("struct", func(t *testing.T) {
+			type myRecord struct {
+				ID   string
+				Data string
+			}
+			record := myRecord{
+				ID:   "userId",
+				Data: issuedToken,
+			}
+
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			copied, ok := filteredData.(myRecord)
+			require.True(t, ok)
+			require.NotNil(t, copied)
+			assert.Equal(t, "userId", copied.ID)
+			assert.Equal(t, "************", copied.Data)
+			// fmt.Println(copied)
+			// "{userId [filtered]}"
+		})
+
+		t.Run("array", func(t *testing.T) {
+			record := []string{
+				"userId",
+				"data",
+				issuedToken,
+			}
+
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			assert.Equal(t, []string([]string{"userId", "data", "************"}), filteredData)
+			// fmt.Println(copied)
+			// "{userId [filtered]}"
+		})
+
+		t.Run("map", func(*testing.T) {
+			mapRecord := map[string]interface{}{
+				"data": issuedToken,
+			}
+			filteredData := maskTool.MaskDetails(mapRecord)
+			require.NotNil(t, filteredData)
+			assert.Equal(t, map[string]interface{}{"data": "************"}, filteredData)
+		})
+
 	})
-
-	t.Run("array", func(t *testing.T) {
-		record := []string{
-			"userId",
-			"data",
-			issuedToken,
-		}
-
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		assert.Equal(t, []string([]string{"userId", "data", filter.GetFilteredLabel()}), filteredData)
-		// fmt.Println(copied)
-		// "{userId [filtered]}"
-	})
-
-	t.Run("map", func(*testing.T) {
-		mapRecord := map[string]interface{}{
-			"data": issuedToken,
-		}
-		filteredData := maskTool.MaskDetails(mapRecord)
-		require.NotNil(t, filteredData)
-		assert.Equal(t, map[string]interface{}{"data": "[filtered]"}, filteredData)
-	})
-
-}
-
-func TestCustomValueFilter(t *testing.T) {
-	const issuedToken = "abcd1234"
-	maskTool := newMaskTool(filter.CustomValueFilter(issuedToken, masker.MPassword))
-	t.Run("string", func(t *testing.T) {
-		record := "Authorization: Bearer " + issuedToken
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		assert.Equal(t, "Authorization: Bearer ************", filteredData)
-
-		// fmt.Println(filteredData)
-		// "Authorization: Bearer [filtered]"
-	})
-
-	t.Run("struct", func(t *testing.T) {
-		type myRecord struct {
-			ID   string
-			Data string
-		}
-		record := myRecord{
-			ID:   "userId",
-			Data: issuedToken,
-		}
-
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		copied, ok := filteredData.(myRecord)
-		require.True(t, ok)
-		require.NotNil(t, copied)
-		assert.Equal(t, "userId", copied.ID)
-		assert.Equal(t, "************", copied.Data)
-		// fmt.Println(copied)
-		// "{userId [filtered]}"
-	})
-
-	t.Run("array", func(t *testing.T) {
-		record := []string{
-			"userId",
-			"data",
-			issuedToken,
-		}
-
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		assert.Equal(t, []string([]string{"userId", "data", "************"}), filteredData)
-		// fmt.Println(copied)
-		// "{userId [filtered]}"
-	})
-
-	t.Run("map", func(*testing.T) {
-		mapRecord := map[string]interface{}{
-			"data": issuedToken,
-		}
-		filteredData := maskTool.MaskDetails(mapRecord)
-		require.NotNil(t, filteredData)
-		assert.Equal(t, map[string]interface{}{"data": "************"}, filteredData)
-	})
-
 }
 
 func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
-	masker := NewMasking(
+	customMasker := NewMasking(
 		filter.ValueFilter("blue"),
 	)
 
@@ -150,7 +151,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 				Name:  "blue",
 				Label: "five",
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(*testData)
 			require.True(t, ok)
@@ -167,7 +168,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 				Name:  "blue",
 				Label: "five",
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(testData)
 			require.True(t, ok)
@@ -187,7 +188,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 					Label: "five",
 				},
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(*testDataParent)
 			require.True(t, ok)
@@ -206,7 +207,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 				unexported: "red",
 				Exported:   "orange",
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(*myStruct)
 			require.True(t, ok)
@@ -223,7 +224,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 			data := &myData{
 				Name: "miss blue",
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(*myData)
 			require.True(t, ok)
@@ -248,7 +249,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 				Bytes: []byte("timeless"),
 				Child: nil,
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(*myStruct)
 			require.True(t, ok)
@@ -268,7 +269,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 					Label: "five",
 				},
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.(map[string]*testData)
 			require.True(t, ok)
@@ -288,7 +289,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 					Label: "five",
 				},
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.([]testData)
 			require.True(t, ok)
@@ -309,7 +310,7 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 					Label: "five",
 				},
 			}
-			v := masker.MaskDetails(data)
+			v := customMasker.MaskDetails(data)
 			require.NotNil(t, v)
 			copied, ok := v.([]*testData)
 			require.True(t, ok)
@@ -324,38 +325,39 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 }
 
 func TestAllFieldFilter(t *testing.T) {
+	type child struct {
+		Data string
+	}
+	s := "test"
+	type myStruct struct {
+		Func      func() time.Time
+		Chan      chan int
+		Bool      bool
+		Bytes     []byte
+		Strs      []string
+		StrsPtr   []*string
+		Interface interface{}
+		Child     child
+		ChildPtr  *child
+		Data      string
+	}
+	data := &myStruct{
+		Func:      time.Now,
+		Chan:      make(chan int),
+		Bool:      true,
+		Bytes:     []byte("timeless"),
+		Strs:      []string{"aa"},
+		StrsPtr:   []*string{&s},
+		Interface: &s,
+		Child:     child{Data: "x"},
+		ChildPtr:  &child{Data: "y"},
+		Data:      "data",
+	}
 
-	t.Run("filter various type", func(t *testing.T) {
+	t.Run("default allfield filter", func(t *testing.T) {
 		mask := NewMasking(
 			filter.AllFieldFilter(),
 		)
-		s := "test"
-
-		type child struct {
-			Data string
-		}
-		type myStruct struct {
-			Func      func() time.Time
-			Chan      chan int
-			Bool      bool
-			Bytes     []byte
-			Strs      []string
-			StrsPtr   []*string
-			Interface interface{}
-			Child     child
-			ChildPtr  *child
-		}
-		data := &myStruct{
-			Func:      time.Now,
-			Chan:      make(chan int),
-			Bool:      true,
-			Bytes:     []byte("timeless"),
-			Strs:      []string{"aa"},
-			StrsPtr:   []*string{&s},
-			Interface: &s,
-			Child:     child{Data: "x"},
-			ChildPtr:  &child{Data: "y"},
-		}
 
 		v := mask.MaskDetails(data)
 		require.NotNil(t, v)
@@ -370,59 +372,84 @@ func TestAllFieldFilter(t *testing.T) {
 		assert.Nil(t, copied.Interface)
 		assert.Empty(t, copied.Child.Data)
 		assert.Empty(t, copied.ChildPtr.Data)
+		assert.Equal(t, filter.GetFilteredLabel(), copied.Data)
 	})
-}
 
-func TestCustomTypeFilter(t *testing.T) {
+	t.Run("custom allfield filter", func(t *testing.T) {
+		mask := NewMasking(
+			filter.CustomAllFieldFilter(customMasker.MPassword),
+		)
 
-	type password string
-	type myRecord struct {
-		ID       string
-		Password password
-	}
-	record := myRecord{
-		ID:       "userId",
-		Password: "abcd1234",
-	}
-
-	t.Run("Type Filter with Mask Type", func(t *testing.T) {
-		maskTool := newMaskTool(filter.CustomTypeFilter(password(""), masker.MPassword))
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		copied, ok := filteredData.(myRecord)
+		v := mask.MaskDetails(data)
+		require.NotNil(t, v)
+		copied, ok := v.(*myStruct)
 		require.True(t, ok)
 		require.NotNil(t, copied)
-		assert.Equal(t, password("************"), copied.Password)
-		assert.Equal(t, "userId", copied.ID)
-
+		assert.Nil(t, copied.Func)
+		assert.Nil(t, copied.Chan)
+		assert.Nil(t, copied.Bytes)
+		assert.Nil(t, copied.Strs)
+		assert.Nil(t, copied.StrsPtr)
+		assert.Nil(t, copied.Interface)
+		assert.Empty(t, copied.Child.Data)
+		assert.Empty(t, copied.ChildPtr.Data)
+		assert.Equal(t, "************", copied.Data)
 	})
 
-	// fmt.Println(copied)
-	// {userId [filtered]}
 }
 
 func TestTypeFilter(t *testing.T) {
-	type password string
-	type myRecord struct {
-		ID       string
-		Password password
-	}
-	record := myRecord{
-		ID:       "userId",
-		Password: "abcd1234",
-	}
+	t.Run("CustomTypeFilter", func(t *testing.T) {
 
-	t.Run("Default Type Filter", func(t *testing.T) {
-		maskTool := newMaskTool(filter.TypeFilter(password("")))
-		filteredData := maskTool.MaskDetails(record)
-		require.NotNil(t, filteredData)
-		copied, ok := filteredData.(myRecord)
-		require.True(t, ok)
-		require.NotNil(t, copied)
-		assert.Equal(t, password(filter.GetFilteredLabel()), copied.Password)
-		assert.Equal(t, "userId", copied.ID)
+		type password string
+		type myRecord struct {
+			ID       string
+			Password password
+		}
+		record := myRecord{
+			ID:       "userId",
+			Password: "abcd1234",
+		}
+
+		t.Run("Type Filter with Mask Type", func(t *testing.T) {
+			maskTool := newMaskTool(filter.CustomTypeFilter(password(""), customMasker.MPassword))
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			copied, ok := filteredData.(myRecord)
+			require.True(t, ok)
+			require.NotNil(t, copied)
+			assert.Equal(t, password("************"), copied.Password)
+			assert.Equal(t, "userId", copied.ID)
+
+		})
+
+		// fmt.Println(copied)
+		// {userId [filtered]}
 	})
 
+	t.Run("TypeFilter", func(t *testing.T) {
+		type password string
+		type myRecord struct {
+			ID       string
+			Password password
+		}
+		record := myRecord{
+			ID:       "userId",
+			Password: "abcd1234",
+		}
+
+		t.Run("Default Type Filter", func(t *testing.T) {
+			maskTool := newMaskTool(filter.TypeFilter(password("")))
+			filteredData := maskTool.MaskDetails(record)
+			require.NotNil(t, filteredData)
+			copied, ok := filteredData.(myRecord)
+			require.True(t, ok)
+			require.NotNil(t, copied)
+			assert.Equal(t, password(filter.GetFilteredLabel()), copied.Password)
+			assert.Equal(t, "userId", copied.ID)
+		})
+
+	})
 }
 
 func TestTagFilter(t *testing.T) {
@@ -459,7 +486,7 @@ func TestTagFilter(t *testing.T) {
 			EMail: "dummy@dummy.com",
 		}
 
-		maskTool := newMaskTool(filter.TagFilter(masker.MEmail))
+		maskTool := newMaskTool(filter.TagFilter(customMasker.MEmail))
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
@@ -519,7 +546,7 @@ func TestPiiPhoneNumber(t *testing.T) {
 }
 
 func TestCustomPiiPhoneNumber(t *testing.T) {
-	maskTool := newMaskTool(filter.CustomPhoneFilter(masker.MMobile))
+	maskTool := newMaskTool(filter.CustomPhoneFilter(customMasker.MMobile))
 
 	t.Run("string", func(t *testing.T) {
 		stringRecord := "090-0000-0000"
@@ -593,7 +620,7 @@ func TestCustomPiiEmail(t *testing.T) {
 		ID:    "userId",
 		Email: "dummy@dummy.com",
 	}
-	maskTool := newMaskTool(filter.CustomEmailFilter(masker.MEmail))
+	maskTool := newMaskTool(filter.CustomEmailFilter(customMasker.MEmail))
 	filteredData := maskTool.MaskDetails(record)
 	require.NotNil(t, filteredData)
 	copied, ok := filteredData.(myRecord)
@@ -676,15 +703,15 @@ func TestCustomFieldFilter(t *testing.T) {
 		}
 
 		maskTool := newMaskTool(
-			filter.CustomFieldFilter("Phone", masker.MMobile),
-			filter.CustomFieldFilter("Email", masker.MEmail),
-			filter.CustomFieldFilter("Url", masker.MURL),
-			filter.CustomFieldFilter("Name", masker.MName),
-			filter.CustomFieldFilter("ID", masker.MID),
-			filter.CustomFieldFilter("Address", masker.MAddress),
-			filter.CustomFieldFilter("CreditCard", masker.MCreditCard),
+			filter.CustomFieldFilter("Phone", customMasker.MMobile),
+			filter.CustomFieldFilter("Email", customMasker.MEmail),
+			filter.CustomFieldFilter("Url", customMasker.MURL),
+			filter.CustomFieldFilter("Name", customMasker.MName),
+			filter.CustomFieldFilter("ID", customMasker.MID),
+			filter.CustomFieldFilter("Address", customMasker.MAddress),
+			filter.CustomFieldFilter("CreditCard", customMasker.MCreditCard),
 		)
-		maskTool.UpdateCustomMaskingChar(masker.PCross)
+		maskTool.UpdateCustomMaskingChar(customMasker.PCross)
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
@@ -707,7 +734,7 @@ func TestCustomFieldFilter(t *testing.T) {
 		mapRecord := map[string]interface{}{
 			"secret": "secretData",
 		}
-		filter := newMaskTool(filter.CustomFieldFilter("secret", masker.MEmail))
+		filter := newMaskTool(filter.CustomFieldFilter("secret", customMasker.MEmail))
 		filteredData := filter.MaskDetails(mapRecord)
 		require.NotNil(t, filteredData)
 		assert.Equal(t, map[string]interface{}(map[string]interface{}{"secret": "secretData"}), mapRecord)
@@ -754,7 +781,7 @@ func TestCustomFieldPrefixFilter(t *testing.T) {
 			SecurePhone: "090-0000-0000",
 		}
 
-		maskTool := newMaskTool(filter.CustomFieldPrefixFilter("Secure", masker.MMobile))
+		maskTool := newMaskTool(filter.CustomFieldPrefixFilter("Secure", customMasker.MMobile))
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
