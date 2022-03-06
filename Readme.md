@@ -1,8 +1,7 @@
 # Golang Masking Tool
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/anu1097/golang-masking-tool/blob/main/LICENSE)
 ![GolangVersion](https://img.shields.io/github/go-mod/go-version/anu1097/golang-masking-tool)
-
-<!-- [![Release](https://img.shields.io/github.com/anu1097/golang-making-tool.svg?style=flat-square)](https://github.com/anu1097/golang-masking-tool/releases/latest) -->
+[![CircleCI](https://circleci.com/gh/anu1097/golang-masking-tool/tree/main.svg?style=svg)](https://circleci.com/gh/anu1097/golang-masking-tool/tree/main)
 
 
 Golang Masking Tool is a simple utility of creating a masker tool which you can use to mask sensitive information.
