@@ -20,8 +20,14 @@ if [ "$1" == "-coverage" ]; then
     echo "Running it with Code Coverage"
     gotestsum --format testname --junitfile unit-tests.xml -- -race -covermode=atomic -coverprofile=coverage.out ./...
     test_status=$?  
-    echo "Opening up coverage report in browser"
-    sleep 2 && go tool cover -html=coverage.out;
+    if [ "$2" == "-upload" ]; then
+        echo "Moving coverage report and junit-xml in tmp folder"
+        go tool cover -html=coverage.out -o coverage.html;
+        mv coverage.html ./tmp/artifacts
+    else 
+        echo "Opening up coverage report in browser"
+        sleep 2 && go tool cover -html=coverage.out;
+    fi
 else
     gotestsum --format testname ./...
     test_status=$?  

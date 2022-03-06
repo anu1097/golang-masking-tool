@@ -1,0 +1,5 @@
+.idea
+*.env
+coverage.out
+unit-tests.xml
+.DS_Store
