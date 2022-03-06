@@ -1,6 +1,7 @@
 package mask
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -10,14 +11,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func newMaskTool(filters ...filter.Filter) masking {
-	return *NewMasking(filters...)
+func NewMaskTool(filters ...filter.Filter) masking {
+	return *NewMaskingInstance(filters...)
 }
 
 func TestValueFilter(t *testing.T) {
 	t.Run("DefaultValueFilter", func(t *testing.T) {
 		const issuedToken = "abcd1234"
-		maskTool := newMaskTool(filter.ValueFilter(issuedToken))
+		maskTool := NewMaskTool(filter.ValueFilter(issuedToken))
 		t.Run("string", func(t *testing.T) {
 			record := "Authorization: Bearer " + issuedToken
 			filteredData := maskTool.MaskDetails(record)
@@ -75,7 +76,7 @@ func TestValueFilter(t *testing.T) {
 	})
 	t.Run("CustomValueFilter", func(t *testing.T) {
 		const issuedToken = "abcd1234"
-		maskTool := newMaskTool(filter.CustomValueFilter(issuedToken, customMasker.MPassword))
+		maskTool := NewMaskTool(filter.CustomValueFilter(issuedToken, customMasker.MPassword))
 		t.Run("string", func(t *testing.T) {
 			record := "Authorization: Bearer " + issuedToken
 			filteredData := maskTool.MaskDetails(record)
@@ -134,7 +135,7 @@ func TestValueFilter(t *testing.T) {
 }
 
 func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
-	customMasker := NewMasking(
+	customMasker := NewMaskingInstance(
 		filter.ValueFilter("blue"),
 	)
 
@@ -355,7 +356,7 @@ func TestAllFieldFilter(t *testing.T) {
 	}
 
 	t.Run("default allfield filter", func(t *testing.T) {
-		mask := NewMasking(
+		mask := NewMaskingInstance(
 			filter.AllFieldFilter(),
 		)
 
@@ -376,7 +377,7 @@ func TestAllFieldFilter(t *testing.T) {
 	})
 
 	t.Run("custom allfield filter", func(t *testing.T) {
-		mask := NewMasking(
+		mask := NewMaskingInstance(
 			filter.CustomAllFieldFilter(customMasker.MPassword),
 		)
 
@@ -412,7 +413,7 @@ func TestTypeFilter(t *testing.T) {
 		}
 
 		t.Run("Type Filter with Mask Type", func(t *testing.T) {
-			maskTool := newMaskTool(filter.CustomTypeFilter(password(""), customMasker.MPassword))
+			maskTool := NewMaskTool(filter.CustomTypeFilter(password(""), customMasker.MPassword))
 			filteredData := maskTool.MaskDetails(record)
 			require.NotNil(t, filteredData)
 			copied, ok := filteredData.(myRecord)
@@ -439,7 +440,7 @@ func TestTypeFilter(t *testing.T) {
 		}
 
 		t.Run("Default Type Filter", func(t *testing.T) {
-			maskTool := newMaskTool(filter.TypeFilter(password("")))
+			maskTool := NewMaskTool(filter.TypeFilter(password("")))
 			filteredData := maskTool.MaskDetails(record)
 			require.NotNil(t, filteredData)
 			copied, ok := filteredData.(myRecord)
@@ -463,7 +464,7 @@ func TestTagFilter(t *testing.T) {
 			EMail: "dummy@dummy.com",
 		}
 
-		maskTool := newMaskTool(filter.TagFilter())
+		maskTool := NewMaskTool(filter.TagFilter())
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
@@ -480,19 +481,22 @@ func TestTagFilter(t *testing.T) {
 		type myRecord struct {
 			ID    string
 			EMail string `mask:"email"`
+			Phone string `mask:"mobile"`
 		}
 		record := myRecord{
 			ID:    "userId",
 			EMail: "dummy@dummy.com",
+			Phone: "9191919191",
 		}
 
-		maskTool := newMaskTool(filter.TagFilter(customMasker.MEmail))
+		maskTool := NewMaskTool(filter.TagFilter(customMasker.MEmail, customMasker.MMobile))
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
 		require.True(t, ok)
 		require.NotNil(t, copied)
 		assert.Equal(t, "dum****@dummy.com", copied.EMail)
+		assert.Equal(t, "9191***191", copied.Phone)
 		assert.Equal(t, "userId", copied.ID)
 
 		// fmt.Println(copied)
@@ -501,7 +505,7 @@ func TestTagFilter(t *testing.T) {
 }
 
 func TestPiiPhoneNumber(t *testing.T) {
-	maskTool := newMaskTool(filter.PhoneFilter())
+	maskTool := NewMaskTool(filter.PhoneFilter())
 
 	t.Run("string", func(t *testing.T) {
 		stringRecord := "090-0000-0000"
@@ -546,7 +550,7 @@ func TestPiiPhoneNumber(t *testing.T) {
 }
 
 func TestCustomPiiPhoneNumber(t *testing.T) {
-	maskTool := newMaskTool(filter.CustomPhoneFilter(customMasker.MMobile))
+	maskTool := NewMaskTool(filter.CustomPhoneFilter(customMasker.MMobile))
 
 	t.Run("string", func(t *testing.T) {
 		stringRecord := "090-0000-0000"
@@ -598,7 +602,7 @@ func TestPiiEmail(t *testing.T) {
 		ID:    "userId",
 		Email: "dummy@dummy.com",
 	}
-	maskTool := newMaskTool(filter.EmailFilter())
+	maskTool := NewMaskTool(filter.EmailFilter())
 	filteredData := maskTool.MaskDetails(record)
 	require.NotNil(t, filteredData)
 	copied, ok := filteredData.(myRecord)
@@ -620,7 +624,7 @@ func TestCustomPiiEmail(t *testing.T) {
 		ID:    "userId",
 		Email: "dummy@dummy.com",
 	}
-	maskTool := newMaskTool(filter.CustomEmailFilter(customMasker.MEmail))
+	maskTool := NewMaskTool(filter.CustomEmailFilter(customMasker.MEmail))
 	filteredData := maskTool.MaskDetails(record)
 	require.NotNil(t, filteredData)
 	copied, ok := filteredData.(myRecord)
@@ -634,25 +638,48 @@ func TestCustomPiiEmail(t *testing.T) {
 }
 
 func TestPiiCustomRegexNumber(t *testing.T) {
-	type myRecord struct {
-		ID   string
-		Link string
-	}
-	record := myRecord{
-		ID:   "userId",
-		Link: "https://dummy-backend.getsimpl.com/v2/random",
-	}
-	maskTool := newMaskTool(filter.CustomRegexFilter("^https:\\/\\/(dummy-backend.)[0-9a-z]*.com\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$"))
-	filteredData := maskTool.MaskDetails(record)
-	require.NotNil(t, filteredData)
-	copied, ok := filteredData.(myRecord)
-	require.True(t, ok)
-	require.NotNil(t, copied)
-	assert.Equal(t, filter.GetFilteredLabel(), copied.Link)
-	assert.Equal(t, "userId", copied.ID)
 
-	// fmt.Println(copied)
-	// {userId [filtered]}
+	customRegex := "^https:\\/\\/(dummy-backend.)[0-9a-z]*.com\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$"
+	t.Run("Default Filter", func(t *testing.T) {
+		type myRecord struct {
+			ID   string
+			Link string
+		}
+		record := myRecord{
+			ID:   "userId",
+			Link: "https://dummy-backend.getsimpl.com/v2/random",
+		}
+		maskTool := NewMaskTool(filter.CustomRegexFilter(customRegex))
+		filteredData := maskTool.MaskDetails(record)
+		require.NotNil(t, filteredData)
+		copied, ok := filteredData.(myRecord)
+		require.True(t, ok)
+		require.NotNil(t, copied)
+		assert.Equal(t, filter.GetFilteredLabel(), copied.Link)
+		assert.Equal(t, "userId", copied.ID)
+		// fmt.Println(copied)
+		// {userId [filtered]}
+	})
+
+	t.Run("Custom Filter", func(t *testing.T) {
+		type myRecord struct {
+			ID   string
+			Link string
+		}
+		record := myRecord{
+			ID:   "userId",
+			Link: "https://dummy-backend.getsimpl.com/v2/random",
+		}
+		maskTool := NewMaskTool(filter.CustomRegexFilterWithMType(customRegex, customMasker.MPassword))
+		filteredData := maskTool.MaskDetails(record)
+		require.NotNil(t, filteredData)
+		copied, ok := filteredData.(myRecord)
+		require.True(t, ok)
+		require.NotNil(t, copied)
+		assert.Equal(t, "************", copied.Link)
+		assert.Equal(t, "userId", copied.ID)
+	})
+
 }
 
 func TestFieldFilter(t *testing.T) {
@@ -666,7 +693,7 @@ func TestFieldFilter(t *testing.T) {
 			Phone: "090-0000-0000",
 		}
 
-		maskTool := newMaskTool(filter.FieldFilter("Phone"))
+		maskTool := NewMaskTool(filter.FieldFilter("Phone"))
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
@@ -702,7 +729,7 @@ func TestCustomFieldFilter(t *testing.T) {
 			CreditCard: "4444-4444-4444-4444",
 		}
 
-		maskTool := newMaskTool(
+		maskTool := NewMaskTool(
 			filter.CustomFieldFilter("Phone", customMasker.MMobile),
 			filter.CustomFieldFilter("Email", customMasker.MEmail),
 			filter.CustomFieldFilter("Url", customMasker.MURL),
@@ -725,7 +752,7 @@ func TestCustomFieldFilter(t *testing.T) {
 		assert.Equal(t, "4444-4xxxxxx44-4444", copied.CreditCard)
 		assert.Equal(t, "http://admin:xxxxx@localhost:1234/uri", copied.Url)
 
-		// fmt.Println(copied)
+		fmt.Println(copied)
 		// {userId [filtered]}
 
 	})
@@ -734,7 +761,7 @@ func TestCustomFieldFilter(t *testing.T) {
 		mapRecord := map[string]interface{}{
 			"secret": "secretData",
 		}
-		filter := newMaskTool(filter.CustomFieldFilter("secret", customMasker.MEmail))
+		filter := NewMaskTool(filter.CustomFieldFilter("secret", customMasker.MEmail))
 		filteredData := filter.MaskDetails(mapRecord)
 		require.NotNil(t, filteredData)
 		assert.Equal(t, map[string]interface{}(map[string]interface{}{"secret": "secretData"}), mapRecord)
@@ -754,7 +781,7 @@ func TestFieldPrefixFilter(t *testing.T) {
 			SecurePhone: "090-0000-0000",
 		}
 
-		maskTool := newMaskTool(filter.FieldPrefixFilter("Secure"))
+		maskTool := NewMaskTool(filter.FieldPrefixFilter("Secure"))
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)
@@ -781,7 +808,7 @@ func TestCustomFieldPrefixFilter(t *testing.T) {
 			SecurePhone: "090-0000-0000",
 		}
 
-		maskTool := newMaskTool(filter.CustomFieldPrefixFilter("Secure", customMasker.MMobile))
+		maskTool := NewMaskTool(filter.CustomFieldPrefixFilter("Secure", customMasker.MMobile))
 		filteredData := maskTool.MaskDetails(record)
 		require.NotNil(t, filteredData)
 		copied, ok := filteredData.(myRecord)

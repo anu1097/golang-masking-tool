@@ -9,6 +9,8 @@ import (
 
 type Masking interface {
 	UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter)
+	UpdateFilterLabel(filterlabel string)
+	GetFilterLabel() string
 	AppendFilters(filters ...filter.Filter)
 	GetFilters() filter.Filters
 	MaskDetails(v interface{}) interface{}
@@ -20,7 +22,7 @@ type masking struct {
 }
 
 // Get a new masking instance. Pass your required filters
-func NewMasking(filters ...filter.Filter) *masking {
+func NewMaskingInstance(filters ...filter.Filter) *masking {
 	filter.SetCustomMaskerInstance(customMasker.NewMasker())
 	var filterList = filter.Filters{}
 	filterList = append(filterList, filters...)
@@ -32,6 +34,16 @@ func NewMasking(filters ...filter.Filter) *masking {
 // Call to update masking character for custom masker
 func (x *masking) UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter) {
 	filter.UpdateCustomMaskingChar(maskingChar)
+}
+
+// Call to update filter label
+func (x *masking) UpdateFilterLabel(filterlabel string) {
+	filter.SetFilteredLabel(filterlabel)
+}
+
+// Call to get filter label
+func (x *masking) GetFilterLabel() string {
+	return filter.GetFilteredLabel()
 }
 
 // Append to existing list of filters in masking instance
