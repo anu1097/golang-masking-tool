@@ -31,8 +31,8 @@ jobs:
             mkdir -p /tmp/test-reports
             mkdir -p ./tmp/artifacts
             ./scripts/run-unit-tests.sh -coverage -upload
-            go get github.com/mattn/goveralls
-            /home/ubuntu/.go_workspace/bin/goveralls -coverprofile=./tmp/artifacts/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
+            # go get github.com/mattn/goveralls
+            # /home/ubuntu/.go_workspace/bin/goveralls -coverprofile=./tmp/artifacts/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
       - store_test_results:
           path: /tmp/test-reports
       - store_artifacts:
