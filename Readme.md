@@ -26,7 +26,6 @@ $ go get -u github.com/anu1097/golang-masking-tool
 
 
 ## Usage
-TO DO
 
 - [Basic example](#basic-example)
 	- [Creating a Masking Instance](#create-masking-instance)
