@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/anu1097/golang-mask-utility/customMasker"
-	"github.com/anu1097/golang-mask-utility/filter"
+	"github.com/anu1097/golang-masking-tool/customMasker"
+	"github.com/anu1097/golang-masking-tool/filter"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

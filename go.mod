@@ -1,4 +1,4 @@
-module github.com/anu1097/golang-mask-utility
+module github.com/anu1097/golang-masking-tool
 
 go 1.17
 

@@ -1,6 +1,6 @@
 package filter
 
-import "github.com/anu1097/golang-mask-utility/customMasker"
+import "github.com/anu1097/golang-masking-tool/customMasker"
 
 type tagFilter struct {
 	SecureTags []string

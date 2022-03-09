@@ -3,7 +3,7 @@ package filter
 import (
 	"strings"
 
-	"github.com/anu1097/golang-mask-utility/customMasker"
+	"github.com/anu1097/golang-masking-tool/customMasker"
 )
 
 // Get Value Filter.

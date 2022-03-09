@@ -3,7 +3,7 @@ package filter
 import (
 	"regexp"
 
-	"github.com/anu1097/golang-mask-utility/customMasker"
+	"github.com/anu1097/golang-masking-tool/customMasker"
 )
 
 const defaultPhoneRegex = `^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$`

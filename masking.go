@@ -3,17 +3,30 @@ package mask
 import (
 	"reflect"
 
-	"github.com/anu1097/golang-mask-utility/customMasker"
-	"github.com/anu1097/golang-mask-utility/filter"
+	"github.com/anu1097/golang-masking-tool/customMasker"
+	"github.com/anu1097/golang-masking-tool/filter"
 )
 
 type Masking interface {
+	// Call to update masking character for custom masker
 	UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter)
+
+	// Call to update filter label
 	UpdateFilterLabel(filterlabel string)
+
+	// Call to get filter label
 	GetFilterLabel() string
+
+	// Append to existing list of filters in masking instance
 	AppendFilters(filters ...filter.Filter)
+
+	// Get complete list of existing filters used by masking instance
 	GetFilters() filter.Filters
+
+	// Call to Mask Details from a given instance
 	MaskDetails(v interface{}) interface{}
+
+	// Internal function which masks based on filters and returns a clone of the data passed
 	clone(fieldName string, value reflect.Value, tag string) reflect.Value
 }
 
@@ -22,6 +35,9 @@ type masking struct {
 }
 
 // Get a new masking instance. Pass your required filters
+//
+// Example:
+//   var maskingInstance = NewMaskTool(filter.FieldFilter("Phone"))
 func NewMaskingInstance(filters ...filter.Filter) *masking {
 	filter.SetCustomMaskerInstance(customMasker.NewMasker())
 	var filterList = filter.Filters{}
@@ -31,37 +47,30 @@ func NewMaskingInstance(filters ...filter.Filter) *masking {
 	}
 }
 
-// Call to update masking character for custom masker
 func (x *masking) UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter) {
 	filter.UpdateCustomMaskingChar(maskingChar)
 }
 
-// Call to update filter label
 func (x *masking) UpdateFilterLabel(filterlabel string) {
 	filter.SetFilteredLabel(filterlabel)
 }
 
-// Call to get filter label
 func (x *masking) GetFilterLabel() string {
 	return filter.GetFilteredLabel()
 }
 
-// Append to existing list of filters in masking instance
 func (x *masking) AppendFilters(filters ...filter.Filter) {
 	x.filterList = append(x.filterList, filters...)
 }
 
-// Get complete list of existing filters used by masking instance
 func (x *masking) GetFilters() filter.Filters {
 	return x.filterList
 }
 
-// Call to Mask Details from a given instance
 func (x *masking) MaskDetails(v interface{}) interface{} {
 	return x.clone("", reflect.ValueOf(v), "").Interface()
 }
 
-// Internal function which masks based on filters and returns a clone of the data passed
 func (x *masking) clone(fieldName string, value reflect.Value, tag string) reflect.Value {
 	adjustValue := func(ret reflect.Value) reflect.Value {
 		switch value.Kind() {
