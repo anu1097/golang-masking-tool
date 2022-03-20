@@ -11,10 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func NewMaskTool(filters ...filter.Filter) masking {
-	return *NewMaskingInstance(filters...)
-}
-
 func TestValueFilter(t *testing.T) {
 	t.Run("DefaultValueFilter", func(t *testing.T) {
 		const issuedToken = "abcd1234"

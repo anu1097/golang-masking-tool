@@ -7,6 +7,14 @@ import (
 	"github.com/anu1097/golang-masking-tool/filter"
 )
 
+// Get a new masking instance. Pass your required filters
+//
+// Example:
+//   var maskingInstance = NewMaskTool(filter.FieldFilter("Phone"))
+func NewMaskTool(filters ...filter.Filter) masking {
+	return *NewMaskingInstance(filters...)
+}
+
 type Masking interface {
 	// Call to update masking character for custom masker
 	UpdateCustomMaskingChar(maskingChar customMasker.MaskingCharacter)
@@ -34,10 +42,10 @@ type masking struct {
 	filterList filter.Filters
 }
 
-// Get a new masking instance. Pass your required filters
+// Get a pointer to new masking instance. Pass your required filters
 //
 // Example:
-//   var maskingInstance = NewMaskTool(filter.FieldFilter("Phone"))
+//   var maskingInstance = NewMaskingInstance(filter.FieldFilter("Phone"))
 func NewMaskingInstance(filters ...filter.Filter) *masking {
 	filter.SetCustomMaskerInstance(customMasker.NewMasker())
 	var filterList = filter.Filters{}
