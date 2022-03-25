@@ -446,4 +446,4 @@ With Custom Mask Type
 ## License
 
 - MIT License
-- Author: Anurag Gupta <anuraag.kval3@gmail.com>
+- Author: Anuraag Gupta <anuraagg.kval3@gmail.com>
