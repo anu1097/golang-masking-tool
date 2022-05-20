@@ -128,7 +128,12 @@ func (x *masking) clone(fieldName string, value reflect.Value, tag string) refle
 				continue
 			}
 			tagValue := f.Tag.Get(filter.GetTagKey())
-			dst.Elem().Field(i).Set(x.clone(f.Name, fv, tagValue))
+			if fv.Type().Kind() == reflect.Ptr && fv.Elem().Kind() == reflect.String {
+				a := x.clone(f.Name, fv.Elem(), tagValue).Interface().(string)
+				dst.Elem().Field(i).Set(reflect.ValueOf(&a))
+			} else {
+				dst.Elem().Field(i).Set(x.clone(f.Name, fv, tagValue))
+			}
 		}
 
 	case reflect.Map:
