@@ -643,7 +643,7 @@ func TestPiiCustomRegexNumber(t *testing.T) {
 		}
 		record := myRecord{
 			ID:   "userId",
-			Link: "https://dummy-backend.getsimpl.com/v2/random",
+			Link: "https://dummy-backend.dummy.com/v2/random",
 		}
 		maskTool := NewMaskTool(filter.CustomRegexFilter(customRegex))
 		filteredData := maskTool.MaskDetails(record)
@@ -664,7 +664,7 @@ func TestPiiCustomRegexNumber(t *testing.T) {
 		}
 		record := myRecord{
 			ID:   "userId",
-			Link: "https://dummy-backend.getsimpl.com/v2/random",
+			Link: "https://dummy-backend.dummy.com/v2/random",
 		}
 		maskTool := NewMaskTool(filter.CustomRegexFilterWithMType(customRegex, customMasker.MPassword))
 		filteredData := maskTool.MaskDetails(record)

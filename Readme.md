@@ -328,7 +328,7 @@ Custom Regex Filter
 	}
 	record := myRecord{
 		ID:   "userId",
-		Link: "https://dummy-backend.getsimpl.com/v2/random",
+		Link: "https://dummy-backend.dummy.com/v2/random",
 	}
 	maskTool := NewMaskTool(filter.CustomRegexFilter(customRegex))
 	filteredData := maskTool.MaskDetails(record)
@@ -345,7 +345,7 @@ Custom Regex Filter With Mask Type
 	}
 	record := myRecord{
 		ID:   "userId",
-		Link: "https://dummy-backend.getsimpl.com/v2/random",
+		Link: "https://dummy-backend.dummy.com/v2/random",
 	}
 	maskTool := NewMaskTool(filter.CustomRegexFilterWithMType(customRegex, customMasker.MPassword))
 	filteredData := maskTool.MaskDetails(record)
