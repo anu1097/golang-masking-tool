@@ -10,7 +10,8 @@ import (
 // Get a new masking instance. Pass your required filters
 //
 // Example:
-//   var maskingInstance = NewMaskTool(filter.FieldFilter("Phone"))
+//
+//	var maskingInstance = NewMaskTool(filter.FieldFilter("Phone"))
 func NewMaskTool(filters ...filter.Filter) masking {
 	return *NewMaskingInstance(filters...)
 }
@@ -45,7 +46,8 @@ type masking struct {
 // Get a pointer to new masking instance. Pass your required filters
 //
 // Example:
-//   var maskingInstance = NewMaskingInstance(filter.FieldFilter("Phone"))
+//
+//	var maskingInstance = NewMaskingInstance(filter.FieldFilter("Phone"))
 func NewMaskingInstance(filters ...filter.Filter) *masking {
 	filter.SetCustomMaskerInstance(customMasker.NewMasker())
 	var filterList = filter.Filters{}
@@ -76,6 +78,9 @@ func (x *masking) GetFilters() filter.Filters {
 }
 
 func (x *masking) MaskDetails(v interface{}) interface{} {
+	if v == nil {
+		return nil
+	}
 	return x.clone("", reflect.ValueOf(v), "").Interface()
 }
 

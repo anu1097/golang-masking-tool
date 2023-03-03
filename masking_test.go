@@ -11,6 +11,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestNilValuePassed(t *testing.T) {
+	//for this one test the filter does not matter
+	maskTool := NewMaskTool(filter.AllFieldFilter())
+	masked := maskTool.MaskDetails(nil)
+	require.Nil(t, masked)
+}
+
 func TestValueFilter(t *testing.T) {
 	t.Run("DefaultValueFilter", func(t *testing.T) {
 		const issuedToken = "abcd1234"
