@@ -329,10 +329,12 @@ func TestVariousDatastructuresForVariousScenarios(t *testing.T) {
 }
 
 func TestAllFieldFilter(t *testing.T) {
+	type ID string
 	type child struct {
 		Data string
 	}
 	s := "test"
+	var id ID = "id"
 	type myStruct struct {
 		Func      func() time.Time
 		Chan      chan int
@@ -344,6 +346,10 @@ func TestAllFieldFilter(t *testing.T) {
 		Child     child
 		ChildPtr  *child
 		Data      string
+		Str       string
+		Pstr      *string
+		ID        ID
+		PID       *ID
 	}
 	data := &myStruct{
 		Func:      time.Now,
@@ -356,6 +362,10 @@ func TestAllFieldFilter(t *testing.T) {
 		Child:     child{Data: "x"},
 		ChildPtr:  &child{Data: "y"},
 		Data:      "data",
+		Str:       s,
+		Pstr:      &s,
+		ID:        id,
+		PID:       &id,
 	}
 
 	t.Run("default allfield filter", func(t *testing.T) {
@@ -377,6 +387,14 @@ func TestAllFieldFilter(t *testing.T) {
 		assert.Empty(t, copied.Child.Data)
 		assert.Empty(t, copied.ChildPtr.Data)
 		assert.Equal(t, filter.GetFilteredLabel(), copied.Data)
+		assert.Equal(t, ("test"), data.Str)
+		assert.Equal(t, filter.GetFilteredLabel(), copied.Str)
+		assert.Equal(t, ("test"), *data.Pstr)
+		assert.Equal(t, filter.GetFilteredLabel(), *copied.Pstr)
+		assert.Equal(t, ID("id"), data.ID)
+		assert.Equal(t, ID(filter.GetFilteredLabel()), copied.ID)
+		assert.Equal(t, ID("id"), *data.PID)
+		assert.Equal(t, ID(filter.GetFilteredLabel()), *copied.PID)
 	})
 
 	t.Run("custom allfield filter", func(t *testing.T) {
@@ -398,6 +416,14 @@ func TestAllFieldFilter(t *testing.T) {
 		assert.Empty(t, copied.Child.Data)
 		assert.Empty(t, copied.ChildPtr.Data)
 		assert.Equal(t, "************", copied.Data)
+		assert.Equal(t, ("test"), data.Str)
+		assert.Equal(t, "************", copied.Str)
+		assert.Equal(t, ("test"), *data.Pstr)
+		assert.Equal(t, "************", *copied.Pstr)
+		assert.Equal(t, ID("id"), data.ID)
+		assert.Equal(t, ID("************"), copied.ID)
+		assert.Equal(t, ID("id"), *data.PID)
+		assert.Equal(t, ID("************"), *copied.PID)
 	})
 
 }
