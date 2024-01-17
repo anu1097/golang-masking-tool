@@ -46,7 +46,7 @@ $ go get -u github.com/anu1097/golang-masking-tool
 
 ### Create Masking Instance
 
-```
+```golang
     var maskingInstance = NewMaskTool()
 ```
 
@@ -55,7 +55,7 @@ $ go get -u github.com/anu1097/golang-masking-tool
 
 Default 
 
-```
+```golang
 	type myRecord struct {
 		ID    string
 		Phone string
@@ -74,7 +74,7 @@ Default
 
 Custom Mask Type
 
-```
+```golang
 	type myRecord struct {
 		ID         string
 		Phone      string
@@ -113,7 +113,7 @@ Custom Mask Type
 ### By Specified Field-Prefix
 
 Default
-```
+```golang
 	type myRecord struct {
 		ID          string
 		SecurePhone string
@@ -131,7 +131,7 @@ Default
 ```
 
 Custom 
-```
+```golang
 	maskTool := NewMaskTool(filter.CustomFieldPrefixFilter("Secure", customMasker.MMobile))
 	filteredData := maskTool.MaskDetails(record)
 
@@ -143,7 +143,7 @@ Custom
 
 Default
 
-```
+```golang
 	const issuedToken = "abcd1234"
 	maskTool := NewMaskTool(filter.ValueFilter(issuedToken))
 	record := "Authorization: Bearer " + issuedToken
@@ -155,7 +155,7 @@ Default
 
 Custom Mask Type
 
-```
+```golang
 	const issuedToken = "abcd1234"
 	maskTool := NewMaskTool(filter.CustomValueFilter(issuedToken, customMasker.MPassword))
 	record := "Authorization: Bearer " + issuedToken
@@ -168,7 +168,7 @@ Custom Mask Type
 
 Default
 
-```
+```golang
 	type password string
 	type myRecord struct {
 		ID       string
@@ -187,7 +187,7 @@ Default
 
 Custom Mask Type
 
-```
+```golang
 	type password string
 	type myRecord struct {
 		ID       string
@@ -208,7 +208,7 @@ Custom Mask Type
 
 Default
 
-```
+```golang
 	type myRecord struct {
 		ID    string
 		EMail string `mask:"secret"` //Use secret for default filter
@@ -227,7 +227,7 @@ Default
 
 Custom Mask Type
 
-```
+```golang
 	type myRecord struct {
 		ID    string
 		EMail string `mask:"email"`
@@ -249,7 +249,7 @@ Custom Mask Type
 
 Default Phone Filter
 
-```
+```golang
 	type myRecord struct {
 		ID    string
 		Phone string
@@ -267,7 +267,7 @@ Default Phone Filter
 
 Custom Phone Filter
 
-```
+```golang
 	type myRecord struct {
 		ID    string
 		Phone string
@@ -285,7 +285,7 @@ Custom Phone Filter
 
 Default Email Filter
 
-```
+```golang
 	type myRecord struct {
 		ID    string
 		Email string
@@ -302,7 +302,7 @@ Default Email Filter
 ```
 
 Custom Email Filter
-```
+```golang
 
 	type myRecord struct {
 		ID    string
@@ -320,7 +320,7 @@ Custom Email Filter
 ```
 
 Custom Regex Filter
-```
+```golang
 	customRegex := "^https:\\/\\/(dummy-backend.)[0-9a-z]*.com\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$"
 	type myRecord struct {
 		ID   string
@@ -338,7 +338,7 @@ Custom Regex Filter
 ```
 
 Custom Regex Filter With Mask Type
-```
+```golang
 	type myRecord struct {
 		ID   string
 		Link string
@@ -357,7 +357,7 @@ Custom Regex Filter With Mask Type
 ### By AllFields Filter
 
 Default
-```
+```golang
 	type child struct {
 		Data string
 	}
@@ -398,7 +398,7 @@ Default
 ```
 
 With Custom Mask Type
-```
+```golang
 	mask := NewMaskingInstance(
 		filter.CustomAllFieldFilter(customMasker.MPassword),
 	)
@@ -426,7 +426,7 @@ With Custom Mask Type
 ## Customise Masking Tool
 
 ### Update Default Filter
-```
+```golang
 	maskTool := NewMaskTool(filter.FieldFilter("Phone"))
 	maskTool.SetFilteredLabel("CustomFilterString")
 	// maskTool.GetFilteredLabel()
@@ -434,12 +434,12 @@ With Custom Mask Type
 ```
 
 ### Update Custom Masker Character
-```
+```golang
 	maskTool := NewMaskTool(filter.FieldFilter("Phone"))
 	maskTool.UpdateCustomMaskingChar(customMasker.PCross)
 ```
 ### Append More Filter
-```
+```golang
 	maskTool := NewMaskTool(filter.FieldFilter("Phone"))
 	maskTool.AppendFilters(filter.EmailFilter())
 ```
