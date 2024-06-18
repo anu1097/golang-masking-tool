@@ -578,6 +578,17 @@ func TestPiiPhoneNumber(t *testing.T) {
 
 }
 
+func TestCorrectBehaviourWithArray(t *testing.T) {
+	const issuedToken = "abcd1234"
+	maskTool := NewMaskTool(filter.ValueFilter(issuedToken))
+	arrayForTest := [1]string{issuedToken}
+	require.NotPanics(t, func() {
+		maskTool.MaskDetails(arrayForTest)
+	})
+	filteredData := maskTool.MaskDetails(arrayForTest)
+	assert.Equal(t, [1]string{"[filtered]"}, filteredData)
+}
+
 func TestCustomPiiPhoneNumber(t *testing.T) {
 	maskTool := NewMaskTool(filter.CustomPhoneFilter(customMasker.MMobile))
 
