@@ -151,7 +151,11 @@ func (x *masking) clone(fieldName string, value reflect.Value, tag string) refle
 		}
 
 	case reflect.Array, reflect.Slice:
-		dst = reflect.MakeSlice(src.Type(), src.Len(), src.Cap())
+		if src.Kind() == reflect.Array {
+			dst = reflect.New(reflect.ArrayOf(src.Len(), src.Type().Elem())).Elem()
+		} else {
+			dst = reflect.MakeSlice(src.Type(), src.Len(), src.Cap())
+		}
 		for i := 0; i < src.Len(); i++ {
 			dst.Index(i).Set(x.clone(fieldName, src.Index(i), ""))
 		}
